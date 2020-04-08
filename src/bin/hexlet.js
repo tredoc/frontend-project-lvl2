@@ -1,5 +1,7 @@
 #!/usr/bin/env node
-import genDiff from '../gendiff.js';
+
+import genDiff from '../gendiff';
+
 const { program } = require('commander');
 const process = require('process');
 
@@ -7,7 +9,7 @@ program
   .arguments('<firstConfig>')
   .arguments('<secondConfig>')
   .action((firstConfig, secondConfig) => {
-      genDiff(firstConfig, secondConfig);
+    genDiff(firstConfig, secondConfig);
   });
 
 program
