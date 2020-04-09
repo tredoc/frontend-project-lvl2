@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 // const process = require('process');
-// const path = require('path');
+
+import yamlToObject from './parsers';
+
+const path = require('path');
 const fs = require('fs');
 const _ = require('lodash');
 
@@ -9,33 +12,46 @@ const _ = require('lodash');
     return filePath;
 };
 */
-export const getDataFromFile = (file) => JSON.parse(fs.readFileSync(file));
+export const compareResultToString = (obj1, obj2) => {
+  const keysA = Object.keys(obj1);
+  const keysB = Object.keys(obj2);
 
-const genDiff = (fileA, fileB) => {
-  const jsonContentA = getDataFromFile(fileA);
-  const jsonContentB = getDataFromFile(fileB);
-
-  const keysA = Object.keys(jsonContentA);
-  const keysB = Object.keys(jsonContentB);
   const allKeys = [...new Set([...keysA, ...keysB])];
 
   const result = allKeys.reduce((acc, current) => {
-    if (jsonContentA[current] === jsonContentB[current]) {
-      return `${acc}\n  ${current}: ${jsonContentA[current]}`;
+    if (obj1[current] === obj2[current]) {
+      return `${acc}\n  ${current}: ${obj1[current]}`;
     }
-    if (_.has(jsonContentA, current) && !_.has(jsonContentB, current)) {
-      return `${acc}\n- ${current}: ${jsonContentA[current]}`;
+    if (_.has(obj1, current) && !_.has(obj2, current)) {
+      return `${acc}\n- ${current}: ${obj1[current]}`;
     }
-    if (!_.has(jsonContentA, current) && _.has(jsonContentB, current)) {
-      return `${acc}\n+ ${current}: ${jsonContentB[current]}`;
+    if (!_.has(obj1, current) && _.has(obj2, current)) {
+      return `${acc}\n+ ${current}: ${obj2[current]}`;
     }
-    if (_.has(jsonContentA, current) && _.has(jsonContentB, current)
-      && jsonContentA[current] !== jsonContentB[current]) {
-      return `${acc}\n+ ${current}: ${jsonContentB[current]}\n- ${current}: ${jsonContentA[current]}`;
+    if (_.has(obj1, current) && _.has(obj2, current)
+        && obj1[current] !== obj2[current]) {
+      return `${acc}\n+ ${current}: ${obj2[current]}\n- ${current}: ${obj1[current]}`;
     }
     return acc;
   }, '');
+  console.log(`{${result}\n}`);
   return `{${result}\n}`;
+};
+
+export const getDataFromFile = (file) => JSON.parse(fs.readFileSync(file));
+
+const genDiff = (fileA, fileB) => {
+  let jsonContentA;
+  let jsonContentB;
+  if (path.extname(fileA) === '.json' && path.extname(fileB) === '.json') {
+    jsonContentA = getDataFromFile(fileA);
+    jsonContentB = getDataFromFile(fileB);
+  } else {
+    jsonContentA = yamlToObject(fileA);
+    jsonContentB = yamlToObject(fileB);
+  }
+
+  return compareResultToString(jsonContentA, jsonContentB);
 };
 
 export default genDiff;
