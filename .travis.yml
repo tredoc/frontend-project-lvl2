@@ -4,5 +4,10 @@ node_js:
 script:
   - make lint
   - make test
+after_script:
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 notifications:
   email: false
+env:
+  global:
+    - CC_TEST_REPORTER_ID=d1f3cd2f3ec993fbe9e195b55c2c0fdd4917768dfcdd0cbe04f10408beb445d6
