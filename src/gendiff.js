@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // const process = require('process');
 
-import yamlToObject from './parsers';
+import { yamlToObject, iniToObject } from './parsers';
 
 const path = require('path');
 const fs = require('fs');
@@ -46,9 +46,12 @@ const genDiff = (fileA, fileB) => {
   if (path.extname(fileA) === '.json' && path.extname(fileB) === '.json') {
     jsonContentA = getDataFromFile(fileA);
     jsonContentB = getDataFromFile(fileB);
-  } else {
+  } else if (path.extname(fileA) === '.yml' && path.extname(fileB) === '.yml') {
     jsonContentA = yamlToObject(fileA);
     jsonContentB = yamlToObject(fileB);
+  } else if (path.extname(fileA) === '.ini' && path.extname(fileB) === '.ini') {
+    jsonContentA = iniToObject(fileA);
+    jsonContentB = iniToObject(fileB);
   }
 
   return compareResultToString(jsonContentA, jsonContentB);

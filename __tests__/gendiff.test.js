@@ -28,6 +28,11 @@ test('Get objects compare', () => {
       + '\n- age: 33'
       + '\n+ gender: male'
       + '\n}');
+  expect(compareResultToString({}, obj2)).toEqual('{'
+      + '\n+ name: Andrew'
+      + '\n+ age: 32'
+      + '\n+ gender: male'
+      + '\n}');
 });
 
 test('Get data from file', () => {
