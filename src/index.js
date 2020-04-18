@@ -3,11 +3,9 @@ import getFileContent from './parsers';
 import printDiff from './formatters/index';
 
 export const buildDiffTree = (obj1, obj2) => {
-  const keysA = Object.keys(obj1);
-  const keysB = Object.keys(obj2);
-  const allKeys = [...new Set([...keysA, ...keysB])];
+  const unionKeys = _.union(_.keys(obj1), _.keys(obj2));
 
-  return allKeys.map((key) => {
+  return unionKeys.map((key) => {
     if (!_.has(obj1, key)) {
       return { name: key, value: obj2[key], status: 'added' };
     }
