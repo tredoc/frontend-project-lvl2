@@ -10,7 +10,7 @@ const isComplexValue = (value) => {
 const printPlain = (diffTree, parent = '') => {
   const str = diffTree.map((node) => {
     const {
-      status, name, value, newValue, children
+      status, name, value, newValue, children,
     } = node;
     switch (status) {
       case 'unchanged':
