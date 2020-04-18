@@ -8,7 +8,7 @@ const printFormats = ['nested', 'plain', 'json'];
 
 printFormats.forEach((printStyle) => {
   fileFormats.forEach((fileType) => {
-    test(`Get difference of ${fileType} files in print style: ${printStyle}`, () => {
+    test(`Get difference of ${fileType} files in ${printStyle} format.`, () => {
       const fileA = path.resolve(fixtures, `before${fileType}`);
       const fileB = path.resolve(fixtures, `after${fileType}`);
       expect(genDiff(fileA, fileB, `${printStyle}`))

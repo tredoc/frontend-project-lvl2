@@ -1,7 +1,7 @@
-const yaml = require('js-yaml');
-const ini = require('ini');
-const fs = require('fs');
-const path = require('path');
+import yaml from 'js-yaml';
+import ini from 'ini';
+import fs from 'fs';
+import path from 'path';
 
 const ymlToObject = (filePath) => yaml.safeLoad(fs.readFileSync(path.resolve(filePath), 'utf8'));
 const iniToObject = (filePath) => ini.parse(fs.readFileSync(path.resolve(filePath), 'utf8'));
