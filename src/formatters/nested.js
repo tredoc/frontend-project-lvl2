@@ -10,13 +10,13 @@ const stringify = (node, depth = 1) => {
     if (typeof node[key] !== 'object') {
       return `${getOffset(depth + 2)}${key}: ${node[key]}`;
     }
-    return `${getOffset(depth + 2)}${key}: ${stringify(node[key], depth + 1)}`;
+    return `${getOffset(depth + 2)}${key}: ${stringify(node[key], depth)}`;
   });
   return ` {\n${str.join('\n')}\n  ${getOffset(depth)}}`;
 };
 
 const printNested = (tree, depth = 1) => {
-  const string = tree.map((node) => {
+  const diffArr = tree.map((node) => {
     const {
       value, newValue, name, status,
     } = node;
@@ -37,7 +37,7 @@ const printNested = (tree, depth = 1) => {
     }
   });
 
-  return `{\n${_.flattenDeep(string).join('\n')}\n${getOffset(depth)}}`;
+  return `{\n${_.flattenDeep(diffArr).join('\n')}\n${getOffset(depth)}}`;
 };
 
 export default printNested;

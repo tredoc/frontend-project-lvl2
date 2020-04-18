@@ -7,7 +7,7 @@ const ymlToObject = (filePath) => yaml.safeLoad(fs.readFileSync(path.resolve(fil
 const iniToObject = (filePath) => ini.parse(fs.readFileSync(path.resolve(filePath), 'utf8'));
 const jsonToObject = (filePath) => JSON.parse(fs.readFileSync(path.resolve(filePath), 'utf8'));
 
-const getFileExtName = (fileName) => path.extname(fileName);
+const getFileExtName = (filePath) => path.extname(filePath);
 
 const getFileContent = (filePath) => {
   const fileExtName = getFileExtName(filePath);
