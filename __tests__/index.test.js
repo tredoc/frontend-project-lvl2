@@ -11,7 +11,7 @@ printFormats.forEach((printStyle) => {
     test(`Get difference of '${fileType}' files in ${printStyle} format`, () => {
       const fileAPath = path.resolve(fixturePath, `before${fileType}`);
       const fileBPath = path.resolve(fixturePath, `after${fileType}`);
-      const checkFilePath = path.resolve(fixturesPath, `${printStyle}-result.txt`);
+      const checkFilePath = path.resolve(fixturePath, `${printStyle}-result.txt`);
       const checkFileContent = fs.readFileSync(checkFilePath, 'utf-8');
 
       expect(genDiff(fileAPath, fileBPath, `${printStyle}`))
