@@ -11,7 +11,7 @@ const printDiff = (tree, format) => {
     case 'json':
       return printJson(tree);
     default:
-      return 'Non supportable format';
+      throw new Error('Unknown format');
   }
 };
 

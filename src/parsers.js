@@ -3,13 +3,13 @@ import ini from 'ini';
 import fs from 'fs';
 import path from 'path';
 
-const ymlToObject = (filePath) => yaml.safeLoad(fs.readFileSync(path.resolve(filePath), 'utf8'));
-const iniToObject = (filePath) => ini.parse(fs.readFileSync(path.resolve(filePath), 'utf8'));
-const jsonToObject = (filePath) => JSON.parse(fs.readFileSync(path.resolve(filePath), 'utf8'));
+const ymlToObject = (filePath) => yaml.safeLoad(fs.readFileSync(filePath, 'utf8'));
+const iniToObject = (filePath) => ini.parse(fs.readFileSync(filePath, 'utf8'));
+const jsonToObject = (filePath) => JSON.parse(fs.readFileSync(filePath, 'utf8'));
 
 const getFileExtName = (filePath) => path.extname(filePath);
 
-const getFileContent = (filePath) => {
+const getParsedData = (filePath) => {
   const fileExtName = getFileExtName(filePath);
 
   switch (fileExtName) {
@@ -20,8 +20,8 @@ const getFileContent = (filePath) => {
     case '.yml':
       return ymlToObject(filePath);
     default:
-      return console.log('non supportable format');
+      throw new Error('Unknown file type');
   }
 };
 
-export default getFileContent;
+export default getParsedData;

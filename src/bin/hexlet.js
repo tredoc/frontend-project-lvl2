@@ -9,6 +9,7 @@ program
   .arguments('<firstConfig>')
   .arguments('<secondConfig>')
   .option('-f, --format [type]', 'output format')
+  // стандартный вывод не соответствовал примеру в задании
   .helpOption('-h, --help', 'output usage information')
   .action((firstConfig, secondConfig) => {
     console.log(genDiff(firstConfig, secondConfig, program.format));

@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import getFileContent from './parsers';
+import getParsedData from './parsers';
 import printDiff from './formatters/index';
 
 export const buildDiffTree = (obj1, obj2) => {
@@ -7,27 +7,27 @@ export const buildDiffTree = (obj1, obj2) => {
 
   return unionKeys.map((key) => {
     if (!_.has(obj1, key)) {
-      return { name: key, value: obj2[key], status: 'added' };
+      return { name: key, value: obj2[key], type: 'added' };
     }
     if (!_.has(obj2, key)) {
-      return { name: key, value: obj1[key], status: 'deleted' };
+      return { name: key, value: obj1[key], type: 'deleted' };
     }
     if (_.isObject(obj1[key]) && _.isObject(obj2[key])) {
-      return { name: key, children: buildDiffTree(obj1[key], obj2[key]), status: 'hasChildren' };
+      return { name: key, children: buildDiffTree(obj1[key], obj2[key]), type: 'hasChildren' };
     }
     if (obj1[key] === obj2[key]) {
-      return { name: key, value: obj1[key], status: 'unchanged' };
+      return { name: key, value: obj1[key], type: 'unchanged' };
     }
     return {
-      name: key, value: obj1[key], newValue: obj2[key], status: 'changed',
+      name: key, value: obj1[key], newValue: obj2[key], type: 'changed',
     };
   });
 };
 
-const genDiff = (fileA, fileB, format = 'nested') => {
-  const fileContentA = getFileContent(fileA);
-  const fileContentB = getFileContent(fileB);
-  const diffTree = buildDiffTree(fileContentA, fileContentB);
+const genDiff = (pathToFileA, pathToFileB, format = 'nested') => {
+  const contentOfFileA = getParsedData(pathToFileA);
+  const contentOfFileB = getParsedData(pathToFileB);
+  const diffTree = buildDiffTree(contentOfFileA, contentOfFileB);
   return printDiff(diffTree, format);
 };
 
