@@ -8,20 +8,23 @@ const iniToObject = (filePath) => ini.parse(fs.readFileSync(filePath, 'utf8'));
 const jsonToObject = (filePath) => JSON.parse(fs.readFileSync(filePath, 'utf8'));
 
 const getFileExtName = (filePath) => path.extname(filePath);
+const getParser = (fileExtName) => {
+  switch (fileExtName) {
+    case '.json':
+      return jsonToObject;
+    case '.ini':
+      return iniToObject;
+    case '.yml':
+      return ymlToObject;
+    default:
+      throw new Error(`Unsupportable file type: ${fileExtName}`);
+  }
+};
 
 const getParsedData = (filePath) => {
   const fileExtName = getFileExtName(filePath);
-
-  switch (fileExtName) {
-    case '.json':
-      return jsonToObject(filePath);
-    case '.ini':
-      return iniToObject(filePath);
-    case '.yml':
-      return ymlToObject(filePath);
-    default:
-      throw new Error('Unknown file type');
-  }
+  const parser = getParser(fileExtName);
+  return parser(filePath);
 };
 
 export default getParsedData;

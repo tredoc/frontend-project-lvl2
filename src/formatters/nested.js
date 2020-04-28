@@ -7,49 +7,42 @@ const stringify = (node, depth = 1) => {
     return `${node}`;
   }
   const keys = Object.keys(node);
-  const subtree = keys.map((key) => {
+  const subTree = keys.map((key) => {
     if (_.isObject(node[key])) {
       return `${getOffset(depth + 2)}${key}: ${stringify(node[key], depth + 2)}`;
     }
     return `${getOffset(depth + 2)}${key}: ${node[key]}`;
   });
-  return `{\n${subtree.join('\n')}\n${getOffset(depth)}}`;
+  return `{\n${subTree.join('\n')}\n${getOffset(depth)}}`;
 };
 
 const printNested = (diffTree) => {
-  const iter = (acc, tree, depth) => {
-    if (tree.length === 0) {
-      return `{\n${_.flattenDeep(acc).join('\n')}\n${getOffset(depth)}}`;
-    }
-    const [node, ...rest] = tree;
-    const {
-      value, newValue, name, type, children,
-    } = node;
+  const iter = (tree, depth) => {
+    const result = tree.map((node) => {
+      const {
+        value, newValue, name, type, children,
+      } = node;
 
-    switch (type) {
-      case 'unchanged':
-        acc.push(`${getOffset(depth + 1)}  ${name}: ${stringify(value, depth + 2)}`);
-        break;
-      case 'added':
-        acc.push(`${getOffset(depth + 1)}+ ${name}: ${stringify(value, depth + 2)}`);
-        break;
-      case 'deleted':
-        acc.push(`${getOffset(depth + 1)}- ${name}: ${stringify(value, depth + 2)}`);
-        break;
-      case 'changed':
-        acc.push(`${getOffset(depth + 1)}- ${name}: ${stringify(value, depth + 2)}`);
-        acc.push(`${getOffset(depth + 1)}+ ${name}: ${stringify(newValue, depth + 2)}`);
-        break;
-      case 'hasChildren':
-        acc.push(`${getOffset(depth + 1)}  ${name}: ${iter([], children, depth + 2)}`);
-        break;
-      default:
-        throw new Error('Unknown type');
-    }
-    return iter(acc, rest, depth);
+      switch (type) {
+        case 'unchanged':
+          return `${getOffset(depth + 1)}  ${name}: ${stringify(value, depth + 2)}`;
+        case 'added':
+          return `${getOffset(depth + 1)}+ ${name}: ${stringify(value, depth + 2)}`;
+        case 'deleted':
+          return `${getOffset(depth + 1)}- ${name}: ${stringify(value, depth + 2)}`;
+        case 'changed':
+          return [`${getOffset(depth + 1)}- ${name}: ${stringify(value, depth + 2)}`,
+            `${getOffset(depth + 1)}+ ${name}: ${stringify(newValue, depth + 2)}`];
+        case 'hasChildren':
+          return `${getOffset(depth + 1)}  ${name}: ${iter(children, depth + 2)}`;
+        default:
+          throw new Error(`Unknown node type: ${type}`);
+      }
+    });
+    return `{\n${_.flatten(result).join('\n')}\n${getOffset(depth)}}`;
   };
 
-  return iter([], diffTree, 0);
+  return iter(diffTree, 0);
 };
 
 export default printNested;

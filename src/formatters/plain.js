@@ -8,36 +8,30 @@ const isComplexValue = (value) => {
 };
 
 const printPlain = (diffTree) => {
-  const iter = (acc, tree, parent = '') => {
-    if (tree.length === 0) {
-      return acc.join('\n');
-    }
-    const [node, ...rest] = tree;
-    const {
-      type, name, value, newValue, children,
-    } = node;
+  const iter = (tree, parent = '') => {
+    const result = tree.map((node) => {
+      const {
+        type, name, value, newValue, children,
+      } = node;
 
-    switch (type) {
-      case 'unchanged':
-        break;
-      case 'added':
-        acc.push(`Property '${parent}${name}' was added with value: ${isComplexValue(value)}`);
-        break;
-      case 'deleted':
-        acc.push(`Property '${parent}${name}' was deleted`);
-        break;
-      case 'changed':
-        acc.push(`Property '${parent}${name}' was changed from ${isComplexValue(value)} to ${isComplexValue(newValue)}`);
-        break;
-      case 'hasChildren':
-        acc.push(`${iter([], children, `${parent}${name}.`)}`);
-        break;
-      default:
-        throw new Error('Undefined type of node');
-    }
-    return iter(acc, rest, parent);
+      switch (type) {
+        case 'unchanged':
+          return [];
+        case 'added':
+          return `Property '${parent}${name}' was added with value: ${isComplexValue(value)}`;
+        case 'deleted':
+          return `Property '${parent}${name}' was deleted`;
+        case 'changed':
+          return `Property '${parent}${name}' was changed from ${isComplexValue(value)} to ${isComplexValue(newValue)}`;
+        case 'hasChildren':
+          return `${iter(children, `${parent}${name}.`)}`;
+        default:
+          throw new Error(`Undefined type of node: ${type}`);
+      }
+    });
+    return _.flatten(result).join('\n');
   };
-  return iter([], diffTree, '');
+  return iter(diffTree, '');
 };
 
 export default printPlain;
