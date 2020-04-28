@@ -19,7 +19,7 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
       - run: make install-deps
-      - run: make run
+      - run: make publish
       - run: make test
       - run: make lint
   coverage:
@@ -32,7 +32,7 @@ jobs:
         with:
           node-version: '12'
       - run: make install-deps
-      - run: make run
+      - run: make publish
       - run: make test
       - run: make lint
       - uses: paambaati/codeclimate-action@v2.2.4
