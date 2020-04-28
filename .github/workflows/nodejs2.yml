@@ -28,13 +28,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
+      - uses: actions/setup-node@master
         with:
           node-version: '12'
       - run: make install-deps
       - run: make publish
       - run: make test
       - run: make lint
-      - uses: paambaati/codeclimate-action@v2.2.4
+      - uses: paambaati/codeclimate-action@v2.6.0
         env:
           CC_TEST_REPORTER_ID: d1f3cd2f3ec993fbe9e195b55c2c0fdd4917768dfcdd0cbe04f10408beb445d6
         with:
