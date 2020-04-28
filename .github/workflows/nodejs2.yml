@@ -3,20 +3,8 @@
 
 name: Node.js CI
 
-on:
-  push:
-    branches:
-      - master
-    tags:
-      - '!*' # Do not execute on tags
-    paths:
-      - src/*
-      - test/*
-      - '*.json'
-      - yarn.lock
-  pull_request:
-    paths:
-      - '!*.MD'
+on: push
+  
 jobs:
   test:
     strategy:
@@ -31,7 +19,7 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
       - run: make install-deps
-      - run: make run
+      - run: make publish
       - run: make test
       - run: make lint
   coverage:
@@ -44,10 +32,10 @@ jobs:
         with:
           node-version: '12'
       - run: make install-deps
-      - run: make run
+      - run: make publish
       - run: make test
       - run: make lint
-      - uses: paambaati/codeclimate-action@v2.2.4
+      - uses: paambaati/codeclimate-action@v2.6.0
         env:
           CC_TEST_REPORTER_ID: d1f3cd2f3ec993fbe9e195b55c2c0fdd4917768dfcdd0cbe04f10408beb445d6
         with:
