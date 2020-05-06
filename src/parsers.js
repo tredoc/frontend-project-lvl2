@@ -1,30 +1,21 @@
 import yaml from 'js-yaml';
 import ini from 'ini';
-import fs from 'fs';
-import path from 'path';
 
-const ymlToObject = (filePath) => yaml.safeLoad(fs.readFileSync(filePath, 'utf8'));
-const iniToObject = (filePath) => ini.parse(fs.readFileSync(filePath, 'utf8'));
-const jsonToObject = (filePath) => JSON.parse(fs.readFileSync(filePath, 'utf8'));
+const ymlToObject = (fileData) => yaml.safeLoad(fileData);
+const iniToObject = (fileData) => ini.parse(fileData);
+const jsonToObject = (fileData) => JSON.parse(fileData);
 
-const getFileExtName = (filePath) => path.extname(filePath);
-const getParser = (fileExtName) => {
+const getParsedData = (fileData, fileExtName) => {
   switch (fileExtName) {
     case '.json':
-      return jsonToObject;
+      return jsonToObject(fileData);
     case '.ini':
-      return iniToObject;
+      return iniToObject(fileData);
     case '.yml':
-      return ymlToObject;
+      return ymlToObject(fileData);
     default:
-      throw new Error(`Unsupportable file type: ${fileExtName}`);
+      throw new Error(`Unknown file type: ${fileExtName}`);
   }
-};
-
-const getParsedData = (filePath) => {
-  const fileExtName = getFileExtName(filePath);
-  const parser = getParser(fileExtName);
-  return parser(filePath);
 };
 
 export default getParsedData;

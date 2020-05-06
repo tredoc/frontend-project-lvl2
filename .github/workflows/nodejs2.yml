@@ -3,40 +3,40 @@
 
 name: Node.js CI
 
-on: push
-  
+on:
+  - push
+  - pull_request
+
 jobs:
-  test:
-    strategy:
-      matrix:
-        platform: [ ubuntu-latest, macOS-latest ]
-        node: [ '12', '10' ]
-    name: test/node ${{ matrix.node }}/${{ matrix.platform }}
-    runs-on: ${{ matrix.platform }}
-    steps:
-      - uses: actions/checkout@master
-      - uses: actions/setup-node@master
-        with:
-          node-version: ${{ matrix.node }}
-      - run: make install-deps
-      - run: make publish
-      - run: make test
-      - run: make lint
-  coverage:
-    needs: [ test ]
-    name: coverage
+  build:
+
+    # The type of machine to run the job on
     runs-on: ubuntu-latest
+
+    strategy:
+      # Node versions list
+      matrix:
+        node-version: [13.x]
+
     steps:
-      - uses: actions/checkout@master
-      - uses: actions/setup-node@master
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
         with:
-          node-version: '12'
-      - run: make install-deps
-      - run: make publish
-      - run: make test
-      - run: make lint
-      - uses: paambaati/codeclimate-action@v2.6.0
+          node-version: ${{ matrix.node-version }}
+      - name: npm install, build
+        run: |
+          make install
         env:
-          CC_TEST_REPORTER_ID: d1f3cd2f3ec993fbe9e195b55c2c0fdd4917768dfcdd0cbe04f10408beb445d6
+          CI: true
+      - name: Run linter
+        run: |
+          make lint
+      - name: Test & publish code coverage
+
+        uses: paambaati/codeclimate-action@v2.6.0
+        env:
+          CC_TEST_REPORTER_ID: ${{d1f3cd2f3ec993fbe9e195b55c2c0fdd4917768dfcdd0cbe04f10408beb445d6}}
         with:
           coverageCommand: make test-coverage
+          debug: true

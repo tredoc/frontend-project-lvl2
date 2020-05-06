@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-const isComplexValue = (value) => {
+const getValue = (value) => {
   if (_.isObject(value)) {
     return '[complex value]';
   }
@@ -18,11 +18,11 @@ const printPlain = (diffTree) => {
         case 'unchanged':
           return [];
         case 'added':
-          return `Property '${parent}${name}' was added with value: ${isComplexValue(value)}`;
+          return `Property '${parent}${name}' was added with value: ${getValue(value)}`;
         case 'deleted':
           return `Property '${parent}${name}' was deleted`;
         case 'changed':
-          return `Property '${parent}${name}' was changed from ${isComplexValue(value)} to ${isComplexValue(newValue)}`;
+          return `Property '${parent}${name}' was changed from ${getValue(value)} to ${getValue(newValue)}`;
         case 'hasChildren':
           return `${iter(children, `${parent}${name}.`)}`;
         default:
