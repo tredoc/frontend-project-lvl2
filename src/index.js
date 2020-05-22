@@ -21,17 +21,17 @@ const buildDiffTree = (obj1, obj2) => {
       return { name: key, value: obj1[key], type: 'unchanged' };
     }
     return {
-      name: key, value: obj1[key], newValue: obj2[key], type: 'changed',
+      name: key, value: obj1[key], changedToValue: obj2[key], type: 'changed',
     };
   });
 };
 
 const getData = (filePath) => fs.readFileSync(filePath, 'utf8');
-const getExtName = (filePath) => path.extname(filePath);
+const getDataType = (filePath) => path.extname(filePath).slice(1);
 
 const genDiff = (pathToFileA, pathToFileB, format = 'nested') => {
-  const contentOfFileA = getParsedData(getData(pathToFileA), getExtName(pathToFileA));
-  const contentOfFileB = getParsedData(getData(pathToFileB), getExtName(pathToFileB));
+  const contentOfFileA = getParsedData(getData(pathToFileA), getDataType(pathToFileA));
+  const contentOfFileB = getParsedData(getData(pathToFileB), getDataType(pathToFileB));
   const diffTree = buildDiffTree(contentOfFileA, contentOfFileB);
 
   return printDiff(diffTree, format);

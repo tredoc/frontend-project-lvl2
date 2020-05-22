@@ -11,7 +11,7 @@ const printPlain = (diffTree) => {
   const iter = (tree, parent = '') => {
     const result = tree.map((node) => {
       const {
-        type, name, value, newValue, children,
+        type, name, value, changedToValue, children,
       } = node;
 
       switch (type) {
@@ -22,7 +22,7 @@ const printPlain = (diffTree) => {
         case 'deleted':
           return `Property '${parent}${name}' was deleted`;
         case 'changed':
-          return `Property '${parent}${name}' was changed from ${getValue(value)} to ${getValue(newValue)}`;
+          return `Property '${parent}${name}' was changed from ${getValue(value)} to ${getValue(changedToValue)}`;
         case 'hasChildren':
           return `${iter(children, `${parent}${name}.`)}`;
         default:
