@@ -8,9 +8,9 @@ const getParsedData = (fileData, dataType) => {
     case 'ini':
       return ini.parse(fileData);
     case 'yml':
-      return  yaml.safeLoad(fileData);
+      return yaml.safeLoad(fileData);
     default:
-      throw new Error(`Unknown file type: ${fileExtName}`);
+      throw new Error(`Unknown type of data: ${dataType}`);
   }
 };
 
