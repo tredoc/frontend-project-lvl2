@@ -20,7 +20,7 @@ const printNested = (diffTree) => {
   const iter = (tree, depth) => {
     const result = tree.map((node) => {
       const {
-        value, changedToValue, name, type, children,
+        value, oldValue, newValue, name, type, children,
       } = node;
 
       switch (type) {
@@ -31,8 +31,8 @@ const printNested = (diffTree) => {
         case 'deleted':
           return `${getOffset(depth + 1)}- ${name}: ${stringify(value, depth + 2)}`;
         case 'changed':
-          return [`${getOffset(depth + 1)}- ${name}: ${stringify(value, depth + 2)}`,
-            `${getOffset(depth + 1)}+ ${name}: ${stringify(changedToValue, depth + 2)}`];
+          return [`${getOffset(depth + 1)}- ${name}: ${stringify(oldValue, depth + 2)}`,
+            `${getOffset(depth + 1)}+ ${name}: ${stringify(newValue, depth + 2)}`];
         case 'hasChildren':
           return `${getOffset(depth + 1)}  ${name}: ${iter(children, depth + 2)}`;
         default:

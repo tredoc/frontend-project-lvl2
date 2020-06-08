@@ -1,17 +1,17 @@
 import yaml from 'js-yaml';
 import ini from 'ini';
 
-const getParsedData = (fileData, dataType) => {
-  switch (dataType) {
+const getParserFunction = (fileExtName) => {
+  switch (fileExtName) {
     case 'json':
-      return JSON.parse(fileData);
+      return JSON.parse;
     case 'ini':
-      return ini.parse(fileData);
+      return ini.parse;
     case 'yml':
-      return yaml.safeLoad(fileData);
+      return yaml.safeLoad;
     default:
-      throw new Error(`Unknown type of data: ${dataType}`);
+      throw new Error(`Unknown file extName: ${fileExtName}`);
   }
 };
 
-export default getParsedData;
+export default getParserFunction;

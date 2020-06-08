@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import fs from 'fs';
 import path from 'path';
-import getParsedData from './parsers';
+import getParserFunction from './parsers';
 import printDiff from './formatters/index';
 
 const buildDiffTree = (obj1, obj2) => {
@@ -21,18 +21,20 @@ const buildDiffTree = (obj1, obj2) => {
       return { name: key, value: obj1[key], type: 'unchanged' };
     }
     return {
-      name: key, value: obj1[key], changedToValue: obj2[key], type: 'changed',
+      name: key, oldValue: obj1[key], newValue: obj2[key], type: 'changed',
     };
   });
 };
 
 const getData = (filePath) => fs.readFileSync(filePath, 'utf8');
-const getDataType = (filePath) => path.extname(filePath).slice(1);
+const getFileExtName = (filePath) => path.extname(filePath).slice(1);
 
-const genDiff = (pathToFileA, pathToFileB, format = 'nested') => {
-  const contentOfFileA = getParsedData(getData(pathToFileA), getDataType(pathToFileA));
-  const contentOfFileB = getParsedData(getData(pathToFileB), getDataType(pathToFileB));
-  const diffTree = buildDiffTree(contentOfFileA, contentOfFileB);
+const genDiff = (path1, path2, format = 'nested') => {
+  const parserFile1 = getParserFunction(getFileExtName(path1));
+  const parserFile2 = getParserFunction(getFileExtName(path2));
+  const contentOfFile1 = parserFile1(getData(path1));
+  const contentOfFile2 = parserFile2(getData(path2));
+  const diffTree = buildDiffTree(contentOfFile1, contentOfFile2);
 
   return printDiff(diffTree, format);
 };
