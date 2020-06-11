@@ -1,7 +1,7 @@
 import yaml from 'js-yaml';
 import ini from 'ini';
 
-const getParserFunction = (fileExtName) => {
+const getParser = (fileExtName) => {
   switch (fileExtName) {
     case 'json':
       return JSON.parse;
@@ -14,4 +14,4 @@ const getParserFunction = (fileExtName) => {
   }
 };
 
-export default getParserFunction;
+export default getParser;

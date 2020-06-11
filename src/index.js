@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import fs from 'fs';
 import path from 'path';
-import getParserFunction from './parsers';
+import getParser from './parsers';
 import printDiff from './formatters/index';
 
 const buildDiffTree = (obj1, obj2) => {
@@ -30,10 +30,10 @@ const getData = (filePath) => fs.readFileSync(filePath, 'utf8');
 const getFileExtName = (filePath) => path.extname(filePath).slice(1);
 
 const genDiff = (path1, path2, format = 'nested') => {
-  const parserFile1 = getParserFunction(getFileExtName(path1));
-  const parserFile2 = getParserFunction(getFileExtName(path2));
-  const contentOfFile1 = parserFile1(getData(path1));
-  const contentOfFile2 = parserFile2(getData(path2));
+  const parseFile1 = getParser(getFileExtName(path1));
+  const parseFile2 = getParser(getFileExtName(path2));
+  const contentOfFile1 = parseFile1(getData(path1));
+  const contentOfFile2 = parseFile2(getData(path2));
   const diffTree = buildDiffTree(contentOfFile1, contentOfFile2);
 
   return printDiff(diffTree, format);
