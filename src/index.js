@@ -30,10 +30,10 @@ const getData = (filePath) => fs.readFileSync(filePath, 'utf8');
 const getFileExtName = (filePath) => path.extname(filePath).slice(1);
 
 const genDiff = (path1, path2, format = 'nested') => {
-  const parseFile1 = getParser(getFileExtName(path1));
-  const parseFile2 = getParser(getFileExtName(path2));
-  const contentOfFile1 = parseFile1(getData(path1));
-  const contentOfFile2 = parseFile2(getData(path2));
+  const parseData1 = getParser(getFileExtName(path1));
+  const parseData2 = getParser(getFileExtName(path2));
+  const contentOfFile1 = parseData1(getData(path1));
+  const contentOfFile2 = parseData2(getData(path2));
   const diffTree = buildDiffTree(contentOfFile1, contentOfFile2);
 
   return printDiff(diffTree, format);
